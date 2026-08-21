@@ -9,11 +9,11 @@ def main():
 
         
         while True:
-                print("=" * 20)
+                print("=" * 30)
                 print("도서 관리 시스템")
-                print("=" * 20)
+                print("=" * 30)
                 print("원하는 메뉴를 선택해 주세요.")
-                print("=" * 20)
+                print("=" * 30)
                 print("① 도서 등록")
                 print("② 전체 도서 조회") 
                 print("③ 도서 검색")
@@ -23,15 +23,22 @@ def main():
 
                 menu = get_valid_integer(input("원하는 메뉴 번호를 입력하세요: "))
                 if menu == 1: # 도서 등록 -> 책 제목, 작가명, isbn 입력 -> isbn_check()로 isbn 검증 -> PaperBook 또는 Ebook 객체 생성 -> book_catalog[ISBN] = 객체
-                        pass
 
-                        isbn = isbn_check(input("ISBN을 입력하세요.")) # ISBN → check dictionary → title → author → create Book → store
-                        if isbn in book_collection.keys():
-                                print("이미 존재하는 ISBN입니다.")
+                        print("① 도서 등록을 시작합니다. ")
 
-                        else: 
-                                book_collection.add(isbn)
+                        isbn = isbn_check(input("ISBN을 입력하세요: ")) # ISBN → check dictionary → title → author → create Book → store
+                        while True:
+                                if isbn in book_collection.keys():
+                                        print("이미 존재하는 ISBN입니다.")
+                                        continue
 
+                                else: 
+                                        book_collection[isbn] = "" # title, author, book type, pages, file size
+                                        break
+
+                        title = get_string(input("책 제목을 입력하세요:")) #only the strings
+
+                        author = get_string(input("작가명을 입력하세요:")) #only the strings
 
                         print("=" * 20)
                         print("① 페이퍼백")
@@ -39,20 +46,45 @@ def main():
                         print("③ 이북")
                         print("④ 오디오북")
                         print("=" * 20)
-                        book_type = get_valid_integer(input("북 타입을 입력하세요: "))
+
+                        book_type = get_valid_integer(input("북 타입을 입력하세요: ")) 
+
+                        while True:
+
+                                if book_type == 1:
+                                        paperback_page = input("총 페이지를 입력하세요: ")
+                                        book = Paperback(title, author, isbn, paperback_page)
+                                elif book_type == 2:
+                                        hardcover_page = input("총 페이지를 입력하세요: ")
+                                        book = Hardcover(title, author, isbn, hardcover_page)
+                                elif book_type == 3:
+                                        ebook_size = input("총 파일 크기를 입력하세요: ")
+                                        book = Ebook(title, author,isbn, ebook_size)
+                                elif book_type == 4:
+                                        audiobook_size = input("총 파일 크기를 입력하세요: ")
+                                        book = Audiobook(title, author, isbn, audiobook_size)
+
+                                break
+
+                        book_collection[isbn] = book
+                        print("도서 등록이 완료되었습니다.")
+                        print(f"ISBN: {isbn} |")
 
 
-                        title = input("책 제목을 입력하세요.") #only the strings
 
-                        author = input("작가명을 입력하세요.") #only the strings
+
+
+
+        
+                        
 
                         
                 elif menu == 2:
-                         # 전체 도서 조회 -> isbn: 책 제목, 작가명, 북타입, 페이지수/파일크기 book_catalog 객체 하나씩 조회
+                         # 전체 도서 조회 -> isbn: 책 제목, 작가명, 북타입, 페이지수/파일크기 book_catalog 객체 하나씩 조회 for 문
 
                         pass
 
-                elif menu == 3: # 도서 검색 -> book isbn 비교 
+                elif menu == 3: # 도서 검색 -> book isbn 비교 (dict.keys())
                         pass
 
                 elif menu == 4: # 대여/반납 처리 -> 
@@ -63,7 +95,7 @@ def main():
 
                 elif menu == 6:
                         print("도서 관리 시스템을 종료합니다.")
-                break
+                        break
 
 
                         
