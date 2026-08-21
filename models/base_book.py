@@ -7,6 +7,8 @@ class Book:
         self.__isbn = isbn
         self.__is_rented = False
 
+    def __str__(self):
+        return f"ISBN: {self.__isbn} | 제목: {self.__title} | 작가: {self.__author}"
 
     def get_isbn(self):
         return self.__isbn

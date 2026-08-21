@@ -17,14 +17,14 @@ def get_string(user_input):
 
 def get_valid_integer(value):
     if not value.isdigit():
-        print("숫자를 입력해 주세요.")
+        print("숫자만 입력 가능합니다.")
         return False
     else: 
         return int(value)
 
 
 def isbn_check(isbn):
-    if not isbn.isdigit():
+    if not isbn.digit():
         print("ISBN은 숫자만 입력할 수 있습니다.")
         return False
     
@@ -35,4 +35,16 @@ def isbn_check(isbn):
     else:
         return isbn
 
-    
+
+def yes_or_not(user_input):
+    if user_input == "":
+        print("아무것도 입력되지 않았습니다.")
+        return False
+
+    if not isinstance(user_input, str):
+        print("문자열만 입력 가능합니다.")
+        return False
+
+    if user_input != "y" and user_input != "n":
+        print("y 혹은 n만 입력해주세요.")
+        return False
