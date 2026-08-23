@@ -1,13 +1,12 @@
 import datetime # 대여 반납 처리시 처리 시간 기록용
-from models.base_book import Book
 from models.specialized_books import Paperback, Hardcover, Ebook, Audiobook
 from utils.helpers import get_string, get_valid_integer, isbn_check, yes_or_not
 
 def main():
-        book_collection = {} 
-        rental_history = [] 
-        rental_count = {}
-        most_rented_books = []
+        book_collection = {} # ISBN을 key 값으로 받고, 나머지 정보를 value값으로 받는 dictionary로 정의 -> 도서 검색시 ISBN으로 조회 가능
+        rental_history = []  # 대여 발생시마다 (isbn, return_time, "반납" 혹은 "대여")의 tuple을 정의하여 리스트에 append -> 각 책마다 대여 정보는 수정불가한 Tuple로, 대여 목록은 List로 정의하여 통계 조회가 가능함 
+        rental_count = {} # ISBN을 key 값으로 받고, 해당 ISBN에 해당하는 도서의 대여 횟수를 value 값으로 추가함
+        most_rented_books = [] 
         monthly_rental_stats = 0
         current_year = datetime.datetime.now().year
         current_month = datetime.datetime.now().month        
@@ -30,7 +29,6 @@ def main():
                 menu = get_valid_integer(input("원하는 메뉴 번호를 입력하세요: "))
 
 #-----------------------------------------------------------------menu 1 도서 등록
-
                 if menu == 1: 
 
                         print("① 도서 등록을 시작합니다. ")
@@ -159,11 +157,9 @@ def main():
 
                                                 else:
                                                         break
-                                                                
 
                                         if go_back_to_main_menu:
                                                 break 
-
                                         
                                         book = book_collection[isbn]
                                         break
@@ -184,7 +180,7 @@ def main():
                 elif menu == 4:
                         print("④ 대여/반납 처리를 시작합니다.")
 
-                        if not book_collection: ## 예외처리?
+                        if not book_collection: 
                                 print("현재 등록된 도서가 없습니다.")
 
                         else:
@@ -202,14 +198,17 @@ def main():
                                         while True:
                                                 isbn = isbn_check(input("13자리 ISBN을 입력하세요: "))   
 
-                                                if isbn == False:
+                                                if isbn is False:
                                                         continue
 
-                                                if isbn not in book_collection:
-                                                        print("해당 ISBN의 도서가 없습니다.") #메인메뉴? 0 -> mainmenu x-> continue
-                                                        continue
-                                                else:
+                                                try:    
                                                         book = book_collection[isbn]
+
+                                                except KeyError:
+                                                        print("해당 ISBN의 도서가 없습니다.")
+                                                        continue
+
+                                                else:
                                                         break
                                                 
                                         if not book.is_rented():
@@ -250,16 +249,19 @@ def main():
                                                 while True:
                                                         isbn = isbn_check(input("13자리 ISBN을 입력하세요: "))   
 
-                                                        if isbn == False:
+                                                        if isbn is False:
                                                                 continue
 
-                                                        if isbn not in book_collection:
+                                                        try:    
+                                                                book = book_collection[isbn]
+
+                                                        except KeyError:
                                                                 print("해당 ISBN의 도서가 없습니다.")
                                                                 continue
 
                                                         else:
-                                                                book = book_collection[isbn]
                                                                 break
+
                                                                                 
                                                 if book.is_rented():
                                                         print("반납 가능한 책입니다.")
@@ -286,53 +288,69 @@ def main():
 #-----------------------------------------------------------------menu 5 통계 조회
                 elif menu == 5: # 월간 대여 통계, 최대 대여 도서 목록 콘솔 출력
 
-                        print("⑤ 통계 조회를 시작합니다.")
-
-
-                        # 최대 대여 도서 목록 
-                        for isbn, _, rental_type in rental_history: #tuple 돌면서 1, 2, 3값 가져오기
-                                
-                                if rental_type == "대여":
-                                        if isbn not in rental_count:
-                                                rental_count[isbn] = 1
-                                        else:
-                                                rental_count[isbn] += 1
-
-                        if rental_count:
-
-                                max_rental_count = max(rental_count.values())
-                                for isbn, count in rental_count.items():
-                                        if count == max_rental_count:
-                                                most_rented_books.append(book_collection[isbn])
-                                print("*" * 20)
-                                print("최대 대여 도서:")
-                                for book in most_rented_books:
-                                        print(book)
-                                print("*" * 20)
-                                print(f"최대 대여 횟수: 총 {max_rental_count}회")
-                                print("*" * 20)
-
-                        else:
+                        if not rental_count and rental_history == []:
                                 print("대여 기록이 존재하지 않습니다.")
-                        
+                                print("메인 메뉴로 돌아갑니다.")
+                                continue
+                        else:
 
-                       
-                        for isbn, time, rental_type in rental_history:
-                                if rental_type == "대여":
+                                print("⑤ 통계 조회를 시작합니다.")
+
+                        while True:
+                                menu5_answer = get_valid_integer(input("월간 대여 통계 조회를 원하시면 1, 최대 대여 도서 목록 조회를 원하시면 2를 입력해 주세요:"))
+
+                                if menu5_answer != 1 and menu5_answer != 2:
+                                        print("숫자 1 혹은 2만 입력 가능합니다.")
+                                        continue
+
+                                break
+
+                        if menu5_answer == 1:
+                                                        # 월간 대여 통계 보기
+                                for isbn, time, rental_type in rental_history:
+                                        if rental_type == "대여":
 
 
-                                        date_time = datetime.datetime.strptime(time, "%Y-%m-%d %H:%M:%S")
-                                        month_num = date_time.month
-                                        year_num = date_time.year                                       
+                                                date_time = datetime.datetime.strptime(time, "%Y-%m-%d %H:%M:%S")
+                                                month_num = date_time.month
+                                                year_num = date_time.year                                       
 
-                                        if current_year == year_num  and month_num == current_month :
-                                                monthly_rental_stats += 1
-                        print("*" * 20)
-                        print(f"{current_year}년 {current_month}월 대여 통계")
-                        print(f"총 대여 횟수: {monthly_rental_stats}")
-                        print("*" * 20)          
+                                                if current_year == year_num  and month_num == current_month :
+                                                        monthly_rental_stats += 1
+                                print("*" * 20)
+                                print("[월간 대여 통계 조회]")
+                                print(f"{current_year}년 {current_month}월 대여 통계")
+                                print(f"총 대여 횟수: {monthly_rental_stats}")
+                                print("*" * 20)      
+
+                        # 최대 대여 도서 목록 보기
+                        elif menu5_answer == 2:
+                                for isbn, _, rental_type in rental_history: #tuple 돌면서 1, 2, 3값 가져오기
+                                        
+                                        if rental_type == "대여":
+                                                if isbn not in rental_count:
+                                                        rental_count[isbn] = 1
+                                                else:
+                                                        rental_count[isbn] += 1
+
+                                if rental_count:
+
+                                        max_rental_count = max(rental_count.values())
+                                        for isbn, count in rental_count.items():
+                                                if count == max_rental_count:
+                                                        most_rented_books.append(book_collection[isbn])
+                                        print("*" * 20)
+                                        print("[최대 대여 도서 목록 조회]")
+                                        print("최대 대여 도서:")
+                                        for book in most_rented_books:
+                                                print(book)
+                                        print("*" * 20)
+                                        print(f"최대 대여 횟수: 총 {max_rental_count}회")
+                                        print("*" * 20)
 
 
+
+        
 #-----------------------------------------------------------------menu 6 시스템 종료
                 elif menu == 6:
                         print("⑥ 도서 관리 시스템을 종료합니다.")

@@ -11,25 +11,30 @@ def get_string(user_input):
         return user_input
 
 
-def get_valid_integer(value):
-    if not value.isdigit():
+def get_valid_integer(user_input):
+    if user_input == "":
+        print("아무것도 입력되지 않았습니다.")
+        return False
+    
+    if not user_input.isdigit():
         print("숫자만 입력 가능합니다.")
         return False
+    
     else: 
-        return int(value)
+        return int(user_input)
 
 
-def isbn_check(isbn):
-    if not isbn.isdigit():
+def isbn_check(user_input):
+    if not user_input.isdigit():
         print("ISBN은 숫자만 입력할 수 있습니다.")
         return False
     
-    elif len(isbn) != 13:
+    elif len(user_input) != 13:
         print("ISBN 숫자 13자리를 입력하세요.")
         return False
     
     else:
-        return isbn
+        return user_input
 
 
 def yes_or_not(user_input):
