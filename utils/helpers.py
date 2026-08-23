@@ -24,7 +24,7 @@ def get_valid_integer(value):
 
 
 def isbn_check(isbn):
-    if not isbn.digit():
+    if not isbn.isdigit():
         print("ISBN은 숫자만 입력할 수 있습니다.")
         return False
     

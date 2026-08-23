@@ -1,11 +1,11 @@
 import datetime # 대여 반납 처리시 처리 시간 기록용
-from models.base_book import Book 
+from models.base_book import Book
 from models.specialized_books import Paperback, Hardcover, Ebook, Audiobook
-from utils.helpers import get_string, get_valid_integer, isbn_check
+from utils.helpers import get_string, get_valid_integer, isbn_check, yes_or_not
 
 def main():
-        book_collection = {} # 도서 리스트 담을 딕셔너리 -- base_book.Book class와 연결
-        rental_history = [] #set이 들어가는 리스트, (ISBN, 처리시간, 대여/반납)
+        book_collection = {} 
+        rental_history = [] 
 
         
         while True:
@@ -17,22 +17,22 @@ def main():
                 print("① 도서 등록")
                 print("② 전체 도서 조회") 
                 print("③ 도서 검색")
-                print("④ 대여/반납 처리") # 대여·반납 시 발생 데이터(ISBN, 처리 시간 등)를 변경 불가능한 **튜플(Tuple)**로 묶어 **리스트(List)**에 순차 저장
-                print("⑤ 통계 조회") # 월간 대여 통계, 최다 대여 도서 목록 콘솔 출력
+                print("④ 대여/반납 처리") 
+                print("⑤ 통계 조회")
                 print("⑥ 종료")
                 print("=" * 30)
 
                 menu = get_valid_integer(input("원하는 메뉴 번호를 입력하세요: "))
 
-#-----------------menu 1 도서 등록
+#-----------------------------------------------------------------menu 1 도서 등록
 
-                if menu == 1: # 도서 등록 -> 책 제목, 작가명, isbn 입력 -> isbn_check()로 isbn 검증 -> PaperBook 또는 Ebook 객체 생성 -> book_catalog[ISBN] = 객체
+                if menu == 1: 
 
                         print("① 도서 등록을 시작합니다. ")
 
 #-----------------isbn 입력                
                         while True:
-                                isbn = isbn_check(input("13자리 ISBN을 입력하세요: ")) # ISBN → check dictionary → title → author → create Book → store
+                                isbn = isbn_check(input("13자리 ISBN을 입력하세요: ")) 
 
                                 if isbn is False:
                                         continue
@@ -46,9 +46,9 @@ def main():
                                 break
 #-----------------book title
                         title = get_string(input("책 제목을 입력하세요:"))
-                        print(f"책 제목[{title}](이)가 입력되었습니다.") #only the strings
+                        print(f"책 제목[{title}](이)가 입력되었습니다.") 
 #-----------------book author
-                        author = get_string(input("작가명을 입력하세요:")) #only the strings
+                        author = get_string(input("작가명을 입력하세요:")) 
                         print(f"작가명 [{author}](이)가 입력되었습니다.")
 
 #-----------------book type
@@ -105,7 +105,7 @@ def main():
                         print(book)
 
 
-#-----------------menu 2                        
+#-----------------------------------------------------------------menu 2 전체 도서 조회                 
                 elif menu == 2:
                         print("② 전체 도서 조회를 시작합니다.")
                         if not book_collection:
@@ -116,10 +116,10 @@ def main():
                                 print("=" * 30)
 
                                 for index, (isbn, book) in enumerate(book_collection.items(), start=1): # __str__ in base_book.py
-                                        print(f"no.{index} | {book}")
+                                        print(f"No.{index} | {book}")
 
-#-----------------menu 3
-                elif menu == 3: # 도서 검색 -> book isbn 비교 (dict.keys())
+#-----------------------------------------------------------------menu 3 도서 검색 
+                elif menu == 3: 
                         print("③ 도서 검색을 시작합니다.")
 
                         if not book_collection:
@@ -131,48 +131,86 @@ def main():
                                         book = book_collection[isbn]
                                         print("도서 검색 완료!") # 대여 여부 추가?
                                         print(book)
+                                        if book.is_rented():
+                                                print("도서 대여 여부: 도서 대여 중")
+                                        else:
+                                                print("도서 대여 여부: 대여 가능")
 
-                                else: 
-                                        print("해당 ISBN의 도서가 없습니다.")
 
-
-#-----------------menu 4
-                elif menu == 4: # 대여/반납 처리 -> 
+#-----------------------------------------------------------------menu 4 대여/반납 처리
+                elif menu == 4:
                         print("④ 대여/반납 처리를 시작합니다.")
 
-                        if not book_collection:
+                        if not book_collection: ## 예외처리?
                                 print("현재 등록된 도서가 없습니다.")
+
                         else:
-                                isbn = isbn_check(input("13자리 ISBN을 입력하세요: "))   
+                                rent_or_return = get_valid_integer(input("대여를 원하시면 1, 반납을 원하시면 2를 입력해 주세요:"))
 
-                                if isbn in book_collection:
-                                        book = book_collection[isbn]
-                                else:
-                                        print("해당 ISBN의 도서가 없습니다.") 
+                                if rent_or_return == 1:
+                                        print("[대여 프로세스]")
+                                        while True:
+                                                isbn = isbn_check(input("13자리 ISBN을 입력하세요: "))   
 
-                                while True:
-
-                                        if book.is_rented is False:
+                                                if isbn not in book_collection:
+                                                        print("해당 ISBN의 도서가 없습니다.")
+                                                        continue
+                                                else:
+                                                        book = book_collection[isbn]
+                                                        break
+                                                
+                                        if not book.is_rented():
                                                 print("대여 가능한 책입니다.")
-                                
-                                                answer = yes_or_not(input("해당 책을 대여하시겠습니까? (y/n)"))
-                                        if answer == "y":
-                                                book.is_rented = True
-                                                print(f"[{book}] 도서 대여가 완료되었습니다.") 
-                                        if answer == "n":
-
+                                                while True:                                                
+                                                        answer = yes_or_not(input("해당 책을 대여하시겠습니까? (y/n)"))
+                                                        if answer == "y":
+                                                                book.rent()
+                                                                rent_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                                                                rental_history.append((isbn, rent_time, "대여"))
+                                                                print(f"[{book}] 도서 대여가 완료되었습니다.") 
+                                                                break
+                                                        else:
+                                                                break
                                         else:
                                                 print("이미 대여된 책입니다.")
-                                                break
+
+                                elif rent_or_return == 2:
+                                        print("[반납 프로세스]")
+                                        while True:
+                                                isbn = isbn_check(input("13자리 ISBN을 입력하세요: "))   
+
+                                                if isbn not in book_collection:
+                                                        print("해당 ISBN의 도서가 없습니다.")
+                                                        continue
+
+                                                else:
+                                                        book = book_collection[isbn]
+                                                        break
+                                                               
+                                        if book.is_rented():
+                                                print("반납 가능한 책입니다.")
+                                                while True:  
+                                                        answer = yes_or_not(input("해당 책을 반납하시겠습니까? (y/n)"))
+
+                                                        if answer == "y":
+                                                                book.return_book()
+                                                                return_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                                                                rental_history.append((isbn, return_time, "반납"))
+                                                                print(f"[{book}] 도서 반납이 완료되었습니다.")
+                                                                break
+                                                        else:
+                                                                break
+                                        else:
+                                                print("아직 대여되지 않은 책입니다.")
 
 
-
-
-#-----------------menu 5
+#-----------------------------------------------------------------menu 5 통계 조회
                 elif menu == 5: # 월간 대여 통계, 최대 대여 도서 목록 콘솔 출력
                         print("⑤ 통계 조회를 시작합니다.")
 
-#-----------------menu 6
+
+
+#-----------------------------------------------------------------menu 6 시스템 종료
                 elif menu == 6:
                         print("⑥ 도서 관리 시스템을 종료합니다.")
                         break
