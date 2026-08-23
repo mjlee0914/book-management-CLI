@@ -23,10 +23,12 @@ class Book:
         return self.__is_rented
 
     def rent(self):
-        return self.__is_rented == True
+        self.__is_rented = True
+        return self.__is_rented 
 
     def return_book(self):
-        return self.__is_rented == False
+        self.__is_rented = False
+        return self.__is_rented
 
     
 
