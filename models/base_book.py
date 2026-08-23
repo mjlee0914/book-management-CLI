@@ -1,5 +1,3 @@
-# 상위 Book 클래스
-
 class Book:
     def __init__(self, title, author, isbn):
         self.__title = title
@@ -19,7 +17,7 @@ class Book:
     def get_author(self):
         return self.__author
 
-    def is_rented(self):        # 대여 여부 확인
+    def is_rented(self):        
         return self.__is_rented
 
     def rent(self):

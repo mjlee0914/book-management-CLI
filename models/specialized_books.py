@@ -28,8 +28,8 @@ class Ebook(Book):
         super().__init__(title, author, isbn)
         self.__file_size = file_size
 
-        def __str__(self):
-            return f"{super().__str__()} | 파일 크기: {self.__file_size}MB"
+    def __str__(self):
+        return f"{super().__str__()} | 파일 크기: {self.__file_size}MB"
 
     
 class Audiobook(Book):

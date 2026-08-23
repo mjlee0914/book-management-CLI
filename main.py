@@ -45,7 +45,6 @@ def main():
                                 if isbn in book_collection.keys():
                                         print("이미 존재하는 ISBN입니다.")
                                         continue
-
                                 
                                 print(f"ISBN[{isbn}]이 입력되었습니다.")
                                 break
@@ -135,20 +134,50 @@ def main():
 
                         if not book_collection:
                                 print("현재 등록된 도서가 없습니다.")
+
                         else:
-                                isbn = isbn_check(input("13자리 ISBN을 입력하세요: ")) 
+                                go_back_to_main_menu = False
 
-                                if isbn is False:
-                                        continue
+                                while True:
+                                        isbn = isbn_check(input("13자리 ISBN을 입력하세요: ")) 
 
-                                if isbn in book_collection:
+                                        if isbn is False:
+                                                continue
+
+                                        if isbn not in book_collection:
+                                                print("해당 ISBN의 도서가 없습니다.")
+                                                print("메인 메뉴로 돌아가시겠습니까? (y/n)")
+                                                answer = yes_or_not(input("y -> 메인 메뉴 돌아가기, n -> ISBN 다시 입력하기"))
+
+                                                if answer:
+                                                        go_back_to_main_menu = True
+                                                        print("메인 메뉴로 돌아갑니다.")
+                                                        break
+
+                                                if answer is None:
+                                                        continue
+
+                                                else:
+                                                        break
+                                                                
+
+                                        if go_back_to_main_menu:
+                                                break 
+
+                                        
                                         book = book_collection[isbn]
+                                        break
+
+                                if not go_back_to_main_menu:                        
                                         print("도서 검색 완료!") 
                                         print(book)
+
                                         if book.is_rented():
                                                 print("도서 대여 여부: 도서 대여 중")
                                         else:
                                                 print("도서 대여 여부: 대여 가능")
+
+                                
 
 
 #-----------------------------------------------------------------menu 4 대여/반납 처리
@@ -173,8 +202,11 @@ def main():
                                         while True:
                                                 isbn = isbn_check(input("13자리 ISBN을 입력하세요: "))   
 
+                                                if isbn == False:
+                                                        continue
+
                                                 if isbn not in book_collection:
-                                                        print("해당 ISBN의 도서가 없습니다.")
+                                                        print("해당 ISBN의 도서가 없습니다.") #메인메뉴? 0 -> mainmenu x-> continue
                                                         continue
                                                 else:
                                                         book = book_collection[isbn]
@@ -196,6 +228,7 @@ def main():
                                                                 continue
 
                                                         else:
+                                                                print("대여 프로세스를 종료합니다.")
                                                                 break
                                         else:
                                                 print("이미 대여된 책입니다.")
@@ -216,6 +249,9 @@ def main():
 
                                                 while True:
                                                         isbn = isbn_check(input("13자리 ISBN을 입력하세요: "))   
+
+                                                        if isbn == False:
+                                                                continue
 
                                                         if isbn not in book_collection:
                                                                 print("해당 ISBN의 도서가 없습니다.")
@@ -240,7 +276,8 @@ def main():
                                                                 if answer is None:
                                                                         continue
 
-                                                                else: 
+                                                                else:
+                                                                        print("반납 프로세스를 종료합니다.") 
                                                                         break
                                                 else:
                                                         print("아직 대여되지 않은 책입니다.")

@@ -1,7 +1,3 @@
-# 입력 검증, ISBN 검증, 출력 포맷팅 같은 공통 함수
-
-from models.base_book import Book
-
 def get_string(user_input):
     if user_input == "":
         print("아무것도 입력되지 않았습니다.")
