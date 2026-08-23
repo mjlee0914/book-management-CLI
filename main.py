@@ -6,10 +6,10 @@ def main():
         book_collection = {} # ISBN을 key 값으로 받고, 나머지 정보를 value값으로 받는 dictionary로 정의 -> 도서 검색시 ISBN으로 조회 가능
         rental_history = []  # 대여 발생시마다 (isbn, return_time, "반납" 혹은 "대여")의 tuple을 정의하여 리스트에 append -> 각 책마다 대여 정보는 수정불가한 Tuple로, 대여 목록은 List로 정의하여 통계 조회가 가능함 
         rental_count = {} # ISBN을 key 값으로 받고, 해당 ISBN에 해당하는 도서의 대여 횟수를 value 값으로 추가함
-        most_rented_books = [] 
-        monthly_rental_stats = 0
-        current_year = datetime.datetime.now().year
-        current_month = datetime.datetime.now().month        
+        most_rented_books = [] # 최다 대여 도서 리스트 -> rental_count를 반복문으로 돌며 최다 대여 도서를 찾고 리스트에 append
+        monthly_rental_stats = 0 # 월간 대여 통계 초기값 0 설정 -> 이번달 대여된 도서를 찾아서 +1씩 추가
+        current_year = datetime.datetime.now().year # 월간 대여 통계 조회용 current year
+        current_month = datetime.datetime.now().month # 월간 대여 통계 조회용 current month
 
 
         while True:
@@ -103,10 +103,10 @@ def main():
 
                                 break
 
-                        book_collection[isbn] = book
+                        book_collection[isbn] = book # key = isbn input, value = book object (paperback, hardcover, ebbok, audiobook)
                         
                         print("도서 등록이 완료되었습니다.")
-                        print(book)
+                        print(book) # child class의 __str__ 적용
                         
 #-----------------------------------------------------------------menu 2 전체 도서 조회                 
                 elif menu == 2:
@@ -121,7 +121,7 @@ def main():
                                 for index, book in enumerate(book_collection.values(), start=1): 
                                         print(f"No.{index} | {book}")
 
-                                        if book.is_rented():
+                                        if book.is_rented(): 
                                                 print("도서 대여 여부: 도서 대여 중")
                                         else:
                                                 print("도서 대여 여부: 대여 가능")
@@ -134,7 +134,7 @@ def main():
                                 print("현재 등록된 도서가 없습니다.")
 
                         else:
-                                go_back_to_main_menu = False
+                                go_back_to_main_menu = False # isbn 존재하지 않을 시 메인메뉴 돌아가기 선택 기능을 위한 변수
 
                                 while True:
                                         isbn = isbn_check(input("13자리 ISBN을 입력하세요: ")) 
@@ -148,7 +148,7 @@ def main():
                                                 answer = yes_or_no(input("y -> 메인 메뉴 돌아가기, n -> ISBN 다시 입력하기"))
 
                                                 if answer:
-                                                        go_back_to_main_menu = True
+                                                        go_back_to_main_menu = True # go_back_to_main_menu = True -> break
                                                         print("메인 메뉴로 돌아갑니다.")
                                                         break
 
