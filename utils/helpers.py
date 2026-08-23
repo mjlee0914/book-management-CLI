@@ -37,17 +37,17 @@ def isbn_check(user_input):
         return user_input
 
 
-def yes_or_not(user_input):
+def yes_or_no(user_input):
 
     if user_input == "":
         print("아무것도 입력되지 않았습니다.")
         return None
-    
-    lower_case = user_input.lower()
+
+    lower_case = user_input.lower() 
 
     if lower_case != "y" and lower_case != "n":
         print("y 혹은 n만 입력해주세요.")
-        return None
+        return None 
         
     if lower_case == "y":
         return True

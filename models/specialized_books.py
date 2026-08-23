@@ -12,7 +12,6 @@ class Paperback(Book):
      
 
 
-
 class Hardcover(Book):
     def __init__(self, title, author, isbn, pages):
         super().__init__(title, author, isbn)

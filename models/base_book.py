@@ -8,15 +8,6 @@ class Book:
     def __str__(self):
         return f"ISBN: {self.__isbn} | 제목: {self.__title} | 작가: {self.__author}"
 
-    def get_isbn(self):
-        return self.__isbn
-
-    def get_title(self):
-        return self.__title
-
-    def get_author(self):
-        return self.__author
-
     def is_rented(self):        
         return self.__is_rented
 
@@ -29,10 +20,6 @@ class Book:
         return self.__is_rented
 
     
-
-
-
-
 
 
 
