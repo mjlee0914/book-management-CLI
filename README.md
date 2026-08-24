@@ -95,14 +95,4 @@ python_final_project_[수강생이름]/
 
 
 ***
-uv run main.py 실행시 메인메뉴 1~6번
-src 파일 
 
-model = 데이터, 구조 관련
-models.base_book.py - 책 제목, 작가명, isbn -> 부모 클래스
-models.specialized_books.py - 단행본, 전자책 -> 하위 클래스
-
-
-예시 사용
-get_valid_integer(,) -> 사용자가 숫자가 아닌 다른 것을 입력할 경우 사용. 반복되는 부분은 함수 사용
-get_string()
